@@ -1,0 +1,133 @@
+// @import "zeroing";
+
+body {
+	font-size: 20px;
+	a {
+		text-decoration: none;
+		color: black;
+	}
+	li {
+		list-style: none;
+	}
+}
+header {
+	.authorization {
+		padding: 5px 30px;
+		background-color: aqua;
+		border: 2px solid black;
+		border-radius: 5px;
+	}
+}
+main {
+	margin-top: 20px;
+	.table-question {
+		display: grid;
+		grid-template: repeat(4, min-content) / 10% 1fr 10%;
+		grid-template-areas:
+			". h ."
+			". b ."
+			". p ."
+			". f .";
+		&__sort {
+			grid-area: h;
+		}
+
+		&__list {
+			grid-area: b;
+			display: grid;
+			grid-template: repeat(3, 150px) / 1fr;
+			grid-row-gap: 10px;
+		}
+
+		&__question {
+			margin: 0 10px;
+			textarea {
+				resize: none;
+				width: calc(100% - 30px);
+				height: 100%;
+				margin: 0 15px;
+			}
+		}
+
+		&__pagination {
+			grid-area: p;
+			justify-self: center;
+		}
+
+		&__add-question {
+			grid-area: f;
+		}
+	}
+	.sort {
+		&__list {
+			display: flex;
+			width: 100%;
+		}
+
+		&__element {
+			width: min-content;
+			margin-right: 10px;
+		}
+
+		&__link {
+		}
+	}
+	.question {
+		border: 1px solid black;
+		border-radius: 5px;
+		&__wrapper {
+			margin: 7px 0;
+			display: grid;
+			grid-template: 30px 70px / 1fr 1fr;
+			grid-template-areas:
+				"qh qh"
+				"qb qb";
+		}
+
+		&__head {
+			grid-area: qh;
+			display: grid;
+			grid-template: repeat(2, min-content) 1fr;
+			grid-template-areas: "qn qm .";
+		}
+
+		&__name {
+			grid-area: qn;
+			margin-left: 15px;
+			width: 200px;
+		}
+
+		&__mail {
+			grid-area: qm;
+			width: 300px;
+		}
+
+		&__text-box {
+			grid-area: qb;
+			resize: none;
+			margin: 0 15px;
+		}
+
+		&__text {
+		}
+
+		&__send-but {
+		}
+	}
+	.pagination {
+		&__list {
+		}
+
+		&__element {
+		}
+
+		&__link {
+		}
+	}
+	.add-question {
+		&__question {
+		}
+	}
+	.send-but {
+	}
+}
