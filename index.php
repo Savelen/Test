@@ -1,15 +1,24 @@
 <?php
 require_once __DIR__ . "/component/autoLoad.php";
 autoLoad(__FILE__);
-if (!isset($_GET['page']) || !isset($_GET['sort_name']) || !isset($_GET['sort_type'])) header("location: index.php?page=1&sort_name=name&sort_type=asc&admin=0");
+// выход из админки
+session_start();
+if (isset($_GET["exit"])) {
+	session_unset();
+	header("location: index.php?page=1&sort_name=name&sort_type=0");
+}
+if (!isset($_GET['page']) || !isset($_GET['sort_name']) || !isset($_GET['sort_type'])) header("location: index.php?page=1&sort_name=name&sort_type=0");
 $page = (!isset($_GET['page']) || $_GET["page"] < 1) ? 1 : $_GET["page"];
 $sortName = !isset($_GET['sort_name']) ? 'name' : $_GET['sort_name'];
 $sortType = !isset($_GET['sort_type']) ? '0' : $_GET['sort_type'];
-$adminMod = !isset($_GET['admin']) ? '0' : $_GET['admin'];
 $dataPost = getInfo((int)$page, $sortName, $sortType);
-function getLink($page, $sortName, $sortType, $adminMod)
+$adminMod = $dataPost['adminMod'];
+
+function getLink($page, $sortName, $sortType, $exit = false)
 {
-	return '?page=' . $page . '&sort_name=' . $sortName . '&sort_type=' . $sortType . "&admin=" . $adminMod;
+	$response = '?page=' . $page . '&sort_name=' . $sortName . '&sort_type=' . $sortType;
+	if ($exit) $response .= "&exit=1";
+	return $response;
 }
 
 ?>
@@ -25,92 +34,117 @@ function getLink($page, $sortName, $sortType, $adminMod)
 
 <body>
 	<header>
+
 		<?php if ($adminMod == 0) { ?>
 			<a href="public/login.html" class="authorization">authorization</a>
 		<?php } else { ?>
-			<h3>Вы Админ</h3>
+			<h3>Вы Админ (<?php echo $_SESSION['login'] ?>)</h3>
+			<a href="<?php echo getLink($page, $sortName, $sortType, true) ?>" class="exit">Выйти</a>
 		<?php } ?>
+
 	</header>
 	<main>
 		<article class="table-question">
-			<div class="table-question__sort">
-				Сортировать по:
+			<div class="table-question__sort sort">
+				<p class="sort__header">Сортировать по:</p>
 				<ul class="sort__list">
+
 					<li class="sort__element">
-						<a href="<?php echo getLink($page, 'name', $sortType, $adminMod) ?>" class="sort__link">Имя</a>
+						<a href="<?php echo getLink($page, 'name', $sortType) ?>" class="sort__link<?php echo ($sortName == 'name') ? ' sort__link_active' : ''; ?>">Имя</a>
 					</li>
 					<li class="sort__element">
-						<a href="<?php echo getLink($page, 'email', $sortType, $adminMod) ?>" class="sort__link">Почта</a>
+						<a href="<?php echo getLink($page, 'email', $sortType) ?>" class="sort__link<?php echo ($sortName == 'email') ? ' sort__link_active' : ''; ?>">Почта</a>
 					</li>
 					<li class="sort__element">
-						<a href="<?php echo getLink($page, 'status', $sortType, $adminMod) ?>" class="sort__link">Статус</a>
+						<a href="<?php echo getLink($page, 'status', $sortType) ?>" class="sort__link<?php echo ($sortName == 'status') ? ' sort__link_active' : ''; ?>">Статус</a>
+					</li>
+					<li class="sort__element"> | </li>
+					<li class="sort__element">
+						<a href="<?php echo getLink($page, $sortName, "1") ?>" class="sort__link<?php echo ($sortType == '1') ? ' sort__link_active' : ''; ?>">Убывание</a>
 					</li>
 					<li class="sort__element">
-						<a href="<?php echo getLink($page, $sortName, "1", $adminMod) ?>" class="sort__link">Убывание</a>
+						<a href="<?php echo getLink($page, $sortName, "0") ?>" class="sort__link<?php echo ($sortType == '0') ? ' sort__link_active' : ''; ?>">Возростание</a>
 					</li>
-					<li class="sort__element">
-						<a href="<?php echo getLink($page, $sortName, "0", $adminMod) ?>" class="sort__link">Возростание</a>
-					</li>
+
 				</ul>
 			</div>
+
+			<!-- Posts -->
 			<ul class="table-question__list">
 				<?php
 				for ($i = 0; $i < count($dataPost['post']); $i++) {
 					$post = $dataPost['post'][$i];
-					$resultText = "";
+
+
 					if ($adminMod == 1) {
-						$resultText .= '<form action="/controller/admin.php" method="POST">';
-					}
-					$resultText .= '<li class="table-question__question question">
-					<div class="question__wrapper">
-						<div class="question__head">';
-					if ($adminMod == 1) {
-						$resultText .= '<input class="question__name" name="name" value="' . $post['name'] . '">
-							<div class="question__mail">' . $post['email'] . '</div>
-							<div class="question__status">' . (($post['status'] == 0) ? "Не выполнено" : "Выполнено");
-					} else {
-						$resultText .= '<div class="question__name">' . $post['name'] . '</div>
-							<div class="question__mail">' . $post['email'] . '</div>
-							<div class="question__status">' . (($post['status'] == 0) ? "Не выполнено" : "Выполнено");
-					}
-					if ($adminMod == 1) {
-						$resultText .= ' |<input type="checkbox" name="st"'. (($post['status'] == 1)? 'checked="1"':"" ).'> </div>
+				?>
+						<li class="table-question__question question">
+							<form action="/controller/admin.php" method="POST">
+								<div class="question__wrapper">
+									<div class="question__head">
+
+										<input class="question__name" name="name" value="<?php echo $post['name']; ?>" readonly>
+
+										<div class="question__mail"><?php echo $post['email']; ?></div>
+
+										<div class="question__status"><?php echo (($post['status'] == 0) ? "Не выполнено" : "Выполнено"); ?> |<input type="checkbox" name="status" <?php echo (($post['status'] == 1) ? 'checked' : ''); ?>> </div>
+
+									</div>
+									<div class="question__text-box">
+										<textarea class="question__text" name="text"><?php echo $post['text']; ?></textarea>
+									</div>
+
+									<?php if ($post['edit'] == 1) { ?>
+										<p class='question__edit'>Отредактировано администратором</p>
+									<?php } ?>
+
+									<button class="question__send-but">Потвердить</button>
+								</div>
+							</form>
+						</li>
+
+
+					<?php } else { ?>
+						<li class="table-question__question question">
+							<div class="question__wrapper">
+								<div class="question__head">
+
+									<div class="question__name"><?php echo $post['name']; ?></div>
+
+									<div class="question__mail"><?php echo $post['email']; ?></div>
+
+									<div class="question__status"><?php echo (($post['status'] == 0) ? "Не выполнено" : "Выполнено"); ?></div>
+
+								</div>
+								<div class="question__text-box">
+
+									<p class="question__text"><?php echo $post['text'] ?></p>
+
+								</div>
+								<?php if ($post['edit'] == 1) { ?>
+									<p class='question__edit'>Отредактировано администратором</p>
+								<?php } ?>
+
 							</div>
-							<div class="question__text-box">
-								<textarea class="question__text" name="text">' . $post['text'] . '</textarea>
-							</div>
-						</div>
-					</li>';
-					} else {
-						$resultText .= '</div>
-							</div>
-							<div class="question__text-box">
-								<p class="question__text">' . $post['text'] . '</p>
-							</div>
-						</div>
-					</li>';
-					}
-					if ($adminMod == 1) {
-						$resultText .= '<button class="question__send">Потвердить</button>
-						</form>';
-					}
-					echo $resultText;
+						</li>
+				<?php }
 				}
 				?>
 			</ul>
+
+			<!-- pagination -->
 			<div class="table-question__pagination pagination">
 				<ul class="pagination__list">
-					<li class="pagination__element">
-						<!-- <a href="#" class="pagination__link">1</a> -->
-						<?php
-						for ($i = 0; $i < $dataPost['page']; $i++) {
-							echo '<a href="' . getLink($i + 1, $sortName, $sortType, $adminMod) . '" class="pagination__link">' . ($i + 1) . '</a>';
-						}
-
-						?>
-					</li>
+					<?php
+					for ($i = 0; $i < $dataPost['page']; $i++) { ?>
+						<li class="pagination__element">
+							<a href="<?php echo getLink($i + 1, $sortName, $sortType); ?>" class="pagination__link"><?php echo ($i + 1); ?></a>
+						</li>
+					<?php } ?>
 				</ul>
 			</div>
+
+			<!-- add post -->
 			<div class="table-question__add-question add-question">
 				<form action="/controller/putPost.php" method="POST" class="add-question__question question">
 					<div class="question__wrapper">
@@ -122,6 +156,7 @@ function getLink($page, $sortName, $sortType, $adminMod)
 					</div>
 					<button class="question__send-but send-but">отправить</button>
 				</form>
+
 			</div>
 		</article>
 	</main>

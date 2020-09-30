@@ -1,4 +1,4 @@
-// @import "zeroing";
+@import "zeroing";
 
 body {
 	font-size: 20px;
@@ -11,11 +11,18 @@ body {
 	}
 }
 header {
+	display: flex;
 	.authorization {
 		padding: 5px 30px;
 		background-color: aqua;
 		border: 2px solid black;
 		border-radius: 5px;
+	}
+	.exit{
+		margin: 3px 0 0 10px;
+		padding: 5px;
+		font-size: 1em;
+		border: 1px solid black;
 	}
 }
 main {
@@ -28,6 +35,7 @@ main {
 			". b ."
 			". p ."
 			". f .";
+		grid-row-gap: 20px;
 		&__sort {
 			grid-area: h;
 		}
@@ -35,7 +43,7 @@ main {
 		&__list {
 			grid-area: b;
 			display: grid;
-			grid-template: repeat(3, 150px) / 1fr;
+			grid-template: repeat(3, 200px) / 1fr;
 			grid-row-gap: 10px;
 		}
 
@@ -68,8 +76,9 @@ main {
 			width: min-content;
 			margin-right: 10px;
 		}
-
-		&__link {
+		
+		&__link_active {
+			color: red;
 		}
 	}
 	.question {
@@ -78,10 +87,11 @@ main {
 		&__wrapper {
 			margin: 7px 0;
 			display: grid;
-			grid-template: 30px 70px / 1fr 1fr;
+			grid-template: 40px 120px 1fr / 1fr 1fr;
 			grid-template-areas:
 				"qh qh"
-				"qb qb";
+				"qb qb"
+				"qe qs";
 		}
 
 		&__head {
@@ -95,39 +105,88 @@ main {
 			grid-area: qn;
 			margin-left: 15px;
 			width: 200px;
+			height: min-content;
+			border-bottom: 1px dashed #000;
 		}
 
 		&__mail {
 			grid-area: qm;
 			width: 300px;
+			height: min-content;
+			border-bottom: 1px dashed #000;
 		}
 
 		&__text-box {
 			grid-area: qb;
 			resize: none;
 			margin: 0 15px;
+			border: 1px solid black;
+		}
+
+		&__edit {
+			justify-self: center;
+			grid-area: qe;
 		}
 
 		&__text {
+			height: 100%;
+			overflow: auto;
 		}
-
 		&__send-but {
+			grid-area: qs;
+			justify-self: end;
+			margin-top: 5px;
+			margin-right: 10px;
+			width: 120px;
+			font-size: 1em;
+			border: 1px solid black;
 		}
 	}
 	.pagination {
-		&__list {
-		}
 
 		&__element {
-		}
-
-		&__link {
-		}
-	}
-	.add-question {
-		&__question {
+			display: inline-block;
 		}
 	}
 	.send-but {
+		margin-left: 5px;
+		margin-bottom: 7px;
 	}
+	.login {
+		&__inp {
+			border: 1px solid black;
+			border-radius: 3px;
+			margin-left: 10px;
+		}
+		&__wrapper {
+			display: flex;
+		}
+	}
+	.password {
+		margin-top: 10px;
+		&__inp {
+			border: 1px solid black;
+			border-radius: 3px;
+			margin-left: 10px;
+		}
+		&__wrapper {
+			display: flex;
+		}
+	}
+	.send-but {
+		width: 100px;
+		height: 25px;
+		margin-top: 10px;
+		font-size: 18px;
+		border: 1px solid black;
+		border-radius: 3px;
+	}
+	.sort {
+
+		&__header {
+			width: 400px;
+			border-bottom: 1px solid black;
+		}
+}
+
 }

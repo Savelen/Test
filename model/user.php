@@ -6,13 +6,13 @@ class User
 {
 	private $dataBase;
 
-	public function __construct()
+	public function __construct($dbInfo)
 	{
 		try {
 			$this->dataBase = new PDO(
-				'mysql:host=jirldlijre.zzz.com.ua;dbname=esersdx',
-				'esersdx',
-				'DSHU@#BHBLdhfu32',
+				'mysql:host=' . $dbInfo['host'] . ';dbname=' . $dbInfo['dbname'],
+				$dbInfo['username'],
+				$dbInfo['password'],
 				[PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
 			);
 		} catch (PDOException $e) {
@@ -21,12 +21,19 @@ class User
 	}
 	public function chechUser($login, $password)
 	{
-		$prepare = $this->dataBase->prepare("SELECT `id` FROM `user` WHERE `login` = :login AND `password` = :pass");
-		$prepare->bindParam(':login', $login, PDO::PARAM_STR);
-		$prepare->bindParam(':pass', $password, PDO::PARAM_STR);
-		$prepare->execute();
-		$result = $prepare->fetch(PDO::FETCH_ASSOC);
-		if (count($result) == 1) return true;
-		else return false;
+		try {
+			// достаём из бд (если есть) инфу о пользователе
+			$pre = $this->dataBase->prepare('SELECT `password` FROM user WHERE `login` = :login');
+			$pre->execute([":login" => $login]);
+			$response = $pre->fetch(PDO::FETCH_ASSOC);
+			if (password_verify($password, $response['password'])) {
+				session_start();
+				$_SESSION['login'] = $login;
+				$_SESSION['adminMod'] = true;
+				return true;
+			} else return false;
+		} catch (Exception $e) {
+			return false;
+		}
 	}
 }

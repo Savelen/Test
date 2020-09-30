@@ -1,3 +1,75 @@
+* {
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+*, *::before, *::after {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+:focus, :active {
+  outline: none;
+}
+
+a:focus, a:active {
+  outline: none;
+}
+
+nav, footer, header, aside {
+  display: block;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  font-size: 100%;
+  line-height: 1;
+  font-size: 14px;
+  -ms-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+input, button, textarea {
+  font-family: inherit;
+}
+
+input::-ms-clear {
+  display: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+button::-moz-focus-inner {
+  padding: 0;
+  border: 0;
+}
+
+a, a:visited {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+ul li {
+  list-style: none;
+}
+
+img {
+  vertical-align: top;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-size: inherit;
+  font-weight: 400;
+}
+
 body {
   font-size: 20px;
 }
@@ -11,11 +83,24 @@ body li {
   list-style: none;
 }
 
+header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 header .authorization {
   padding: 5px 30px;
   background-color: aqua;
   border: 2px solid black;
   border-radius: 5px;
+}
+
+header .exit {
+  margin: 3px 0 0 10px;
+  padding: 5px;
+  font-size: 1em;
+  border: 1px solid black;
 }
 
 main {
@@ -31,6 +116,7 @@ main .table-question {
       grid-template: repeat(4, -webkit-min-content)/10% 1fr 10%;
       grid-template: repeat(4, min-content)/10% 1fr 10%;
       grid-template-areas: ". h ." ". b ." ". p ." ". f .";
+  grid-row-gap: 20px;
 }
 
 main .table-question__sort {
@@ -45,9 +131,9 @@ main .table-question__list {
   grid-area: b;
   display: -ms-grid;
   display: grid;
-  -ms-grid-rows: (150px)[3];
+  -ms-grid-rows: (200px)[3];
   -ms-grid-columns: 1fr;
-      grid-template: repeat(3, 150px)/1fr;
+      grid-template: repeat(3, 200px)/1fr;
   grid-row-gap: 10px;
 }
 
@@ -90,6 +176,10 @@ main .sort__element {
   margin-right: 10px;
 }
 
+main .sort__link_active {
+  color: red;
+}
+
 main .question {
   border: 1px solid black;
   border-radius: 5px;
@@ -99,10 +189,10 @@ main .question__wrapper {
   margin: 7px 0;
   display: -ms-grid;
   display: grid;
-  -ms-grid-rows: 30px 70px;
+  -ms-grid-rows: 40px 120px 1fr;
   -ms-grid-columns: 1fr 1fr;
-      grid-template: 30px 70px / 1fr 1fr;
-      grid-template-areas: "qh qh" "qb qb";
+      grid-template: 40px 120px 1fr / 1fr 1fr;
+      grid-template-areas: "qh qh" "qb qb" "qe qs";
 }
 
 main .question__head {
@@ -123,6 +213,10 @@ main .question__name {
   grid-area: qn;
   margin-left: 15px;
   width: 200px;
+  height: -webkit-min-content;
+  height: -moz-min-content;
+  height: min-content;
+  border-bottom: 1px dashed #000;
 }
 
 main .question__mail {
@@ -130,6 +224,10 @@ main .question__mail {
   -ms-grid-column: 2;
   grid-area: qm;
   width: 300px;
+  height: -webkit-min-content;
+  height: -moz-min-content;
+  height: min-content;
+  border-bottom: 1px dashed #000;
 }
 
 main .question__text-box {
@@ -139,4 +237,82 @@ main .question__text-box {
   grid-area: qb;
   resize: none;
   margin: 0 15px;
+  border: 1px solid black;
+}
+
+main .question__edit {
+  -ms-grid-column-align: center;
+      justify-self: center;
+  -ms-grid-row: 3;
+  -ms-grid-column: 1;
+  grid-area: qe;
+}
+
+main .question__text {
+  height: 100%;
+  overflow: auto;
+}
+
+main .question__send-but {
+  -ms-grid-row: 3;
+  -ms-grid-column: 2;
+  grid-area: qs;
+  -ms-grid-column-align: end;
+      justify-self: end;
+  margin-top: 5px;
+  margin-right: 10px;
+  width: 120px;
+  font-size: 1em;
+  border: 1px solid black;
+}
+
+main .pagination__element {
+  display: inline-block;
+}
+
+main .send-but {
+  margin-left: 5px;
+  margin-bottom: 7px;
+}
+
+main .login__inp {
+  border: 1px solid black;
+  border-radius: 3px;
+  margin-left: 10px;
+}
+
+main .login__wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+main .password {
+  margin-top: 10px;
+}
+
+main .password__inp {
+  border: 1px solid black;
+  border-radius: 3px;
+  margin-left: 10px;
+}
+
+main .password__wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+main .send-but {
+  width: 100px;
+  height: 25px;
+  margin-top: 10px;
+  font-size: 18px;
+  border: 1px solid black;
+  border-radius: 3px;
+}
+
+main .sort__header {
+  width: 400px;
+  border-bottom: 1px solid black;
 }

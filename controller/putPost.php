@@ -9,11 +9,7 @@ $postData = [
 ];
 
 if (strlen($postData['name']) <= 30 && strlen($postData['name']) >= 3 && strlen($postData['email']) <= 100 && strlen($postData['text']) <= 1000 && strlen($postData['text']) >= 1 && preg_match("~.*?@.*?\..*?~", $postData['email'])) {
-	$newPost = new Post();
-
-	$postData['name'] = preg_replace("~<~", "\<", $postData['name']);
-	$postData['email'] = preg_replace("~<~", "\<", $postData['email']);
-	$postData['text'] = preg_replace("~<~", "\<", $postData['text']);
+	$newPost = new Post(DB_INFO);
 
 	try {
 		if ($newPost->putPost($postData)) echo "<h1>Запись добавленна<h1>";

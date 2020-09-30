@@ -13,12 +13,16 @@
 	<main>
 		<form action="../controller/getUser.php" method="GET" class="authorization">
 			<div class="authorization__login login">
-				<p>Login</p>
-				<input type="text" name="login" class="login__inp">
+				<label class="login__wrapper">
+					<p>Login</p>
+					<input type="text" name="login" minlength="3" class="login__inp">
+				</label>
 			</div>
 			<div class="authorization__password password">
-				<p>Password</p>
-				<input type="text" name="password" class="password__inp">
+				<label class="login__wrapper">
+					<p>Password</p>
+					<input type="text" name="password" minlength="3" class="password__inp">
+				</label>
 			</div>
 			<button class="authorization__send-but send-but">отправить</button>
 		</form>
